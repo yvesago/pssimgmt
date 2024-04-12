@@ -1,0 +1,8 @@
+{
+    "Port":":8000",
+    "DBName":"pssimgmt.sqlite",
+    "CorsOrigin":"*",
+    "AuthURL":"http://localhost:3004",
+    "CallbackURL":"http://localhost:3000/#/auth-callback",
+    "JwtPass":"testpass"
+}

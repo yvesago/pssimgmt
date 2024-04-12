@@ -1,0 +1,8 @@
+*.swp
+*.swo
+
+**/MyConfig.js.*
+
+**/node_modules/*
+**/build/*
+
