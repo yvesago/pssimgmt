@@ -325,7 +325,7 @@ func GetRegleByDom(c *gin.Context) {
 			tdom := dom
 			init := 0
 			for {
-			    var dr ReglesDomaineses
+				var dr ReglesDomaineses
 				dbRresult := dbmap.Model("ReglesDomaineses").Where("regle = ? AND domaine = ?", regle.ID, tdom).First(&dr)
 				//log.Printf(" => regle by dom : Dom %s, ID %d, Name «%s», Applicable: %d, Exist %v\n", tdom, regle.ID, regle.Name, dr.Applicable, dbRresult.Error)
 				if errors.Is(dbRresult.Error, gorm.ErrRecordNotFound) == false && dr.Applicable == 1 {

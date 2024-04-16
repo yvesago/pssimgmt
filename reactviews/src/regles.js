@@ -457,6 +457,10 @@ export const EvalDialog = (props) => {
         setOpen(false);
     };
 
+    if (props.record.status != 'ok') {
+        return '';
+    }
+
     if (props.viewonly === false) {
         return ( 
             <Typography component="span" variant="body2">
