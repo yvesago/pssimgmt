@@ -119,6 +119,9 @@ func (t *Theme) AfterFind(tx *gorm.DB) (err error) {
 	//dbmap.Raw("SELECT * from regles AS r JOIN regles_themeses AS rt ON r.ID = rt.regle AND rt.th=?", id).Find(&rs)
 
 	for i, r := range rs {
+		if rs[i].Status != "ok" {
+			continue
+		}
 		rs[i].Theme.Name = t.Name
 		rs[i].Theme.ID = t.ID
 		t.ReglesIDs = append(t.ReglesIDs, r.ID)

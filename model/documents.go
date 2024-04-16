@@ -24,10 +24,10 @@ func GetDocuments(c *gin.Context) {
 
 	a := Auth(c)
 	a.Log("GetDocuments")
-	if a.Role != "admin" {
+	/*if a.Role != "admin" {
 		c.JSON(403, gin.H{"error": "admin role required"})
 		return
-	}
+	}*/
 
 	query := "SELECT * FROM documents"
 	// Parse query string
@@ -67,10 +67,10 @@ func GetDocument(c *gin.Context) {
 
 	a := Auth(c)
 	a.Log("GetDocument " + id)
-	if a.Role != "admin" {
+	/*if a.Role != "admin" {
 		c.JSON(403, gin.H{"error": "admin role required"})
 		return
-	}
+	}*/
 
 	var document Documents
 	err := dbmap.First(&document, id).Error

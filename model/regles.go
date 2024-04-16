@@ -1,7 +1,7 @@
 package model
 
 import (
-	//	"fmt"
+	//"fmt"
 	//"encoding/json"
 	"errors"
 	//"log"
@@ -395,6 +395,7 @@ func UpdateRegleByDom(c *gin.Context) {
 	new_rd := rd
 
 	if rdjson.Modif == "modif" && a.Role == "admin" {
+		new_rd.Applicable = rdjson.Applicable
 		new_rd.Modifdesc = rdjson.Modifdesc
 		new_rd.Supldesc = rdjson.Supldesc
 	}

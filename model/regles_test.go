@@ -17,11 +17,13 @@ func initReglesValues(connString string, verbose bool) {
 	dbmap := InitDb(connString, verbose)
 	a1 := Regles{
 		Name:     "regle 1",
+		Status: "ok",
 		Descorig: "descorig regle 1",
 	}
 	dbmap.Create(&a1)
 	a2 := Regles{
 		Name:     "regle 2",
+		Status: "ok",
 		Descorig: "descorig regle 2",
 	}
 	dbmap.Create(&a2)
@@ -58,7 +60,7 @@ func initReglesValues(connString string, verbose bool) {
 	}
 	dbmap.Create(&dom2)
 
-	dr1 := ReglesDomaineses{Regle: a1.ID, Domaine: dom1.ID, Modifdesc: "modif domaine 1 for regle 1 "}
+	dr1 := ReglesDomaineses{Regle: a1.ID, Domaine: dom1.ID, Applicable: 1, Modifdesc: "modif domaine 1 for regle 1 "}
 	dbmap.Create(&dr1)
 
         //Themes
@@ -121,7 +123,7 @@ func TestRegleByDom(t *testing.T) {
 	// Update one
 	b := new(bytes.Buffer)
 	log.Println("= Update Regle with new RegleDomaine")
-	dr2 := ReglesDomaineses{Modifdesc: "modif domaine 2 fo regle 2 ", Modif: "modif" }
+	dr2 := ReglesDomaineses{Modifdesc: "modif domaine 2 fo regle 2 ", Applicable: 1, Modif: "modif" }
 	//a2.RegleDomaine = dr2
 	//fmt.Println(prettyPrint(a2))
 	json.NewEncoder(b).Encode(dr2)
@@ -142,7 +144,7 @@ func TestRegleByDom(t *testing.T) {
 	assert.Equal(t, dr2.Modifdesc, aRes.RegleDomaine.Modifdesc, "http PUT success")
 
 	log.Println("= Update Regle with RegleDomaine")
-	dr1 := ReglesDomaineses{Modifdesc: "modif domaine 1 for regle 1 ", Modif: "modif"}
+	dr1 := ReglesDomaineses{Modifdesc: "modif domaine 1 for regle 1 ", Applicable: 1, Modif: "modif"}
 	//a1.RegleDomaine = dr1
 	//fmt.Println(prettyPrint(a1))
 	json.NewEncoder(b).Encode(dr1)
@@ -161,7 +163,7 @@ func TestRegleByDom(t *testing.T) {
 	assert.Equal(t, dr1.Modifdesc, aRes1.RegleDomaine.Modifdesc, "http PUT success")
 
 	log.Println("= Update Eval Regle with RegleDomaine")
-	dr12 := ReglesDomaineses{Applicable: 0, Modif: "eval"}
+	dr12 := ReglesDomaineses{Applicable: 1, Modif: "eval"}
 	json.NewEncoder(b).Encode(dr12)
 	req, _ = http.NewRequest("PUT", urla+"/1/1", b)
 	req.Header.Set("Content-Type", "application/json")
