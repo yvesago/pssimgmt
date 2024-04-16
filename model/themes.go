@@ -2,11 +2,12 @@ package model
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	//"log"
 	"math"
 	"sort"
 	"time"
-	//"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -121,11 +122,36 @@ func (t *Theme) AfterFind(tx *gorm.DB) (err error) {
 		rs[i].Theme.Name = t.Name
 		rs[i].Theme.ID = t.ID
 		t.ReglesIDs = append(t.ReglesIDs, r.ID)
-		//if t.Dom != "" {
-		var dr ReglesDomaineses
-		tx.Model("ReglesDomaineses").Where("regle = ? AND domaine = ?", r.ID, t.Dom).Find(&dr)
-		r.RegleDomaine = dr
-		//}
+		tdom := t.Dom
+		init := 0
+		for {
+			var dr ReglesDomaineses
+			dbRresult := tx.Model("ReglesDomaineses").Where("regle = ? AND domaine = ?", r.ID, tdom).Find(&dr)
+			//log.Printf(" themes by dom  => ID %d, Name «%s», Applicable: %d, Exist %v, Parent %d\n", t.ID, t.Name, dr.Applicable, dbRresult.Error, t.Parent)
+			if errors.Is(dbRresult.Error, gorm.ErrRecordNotFound) == false && dr.Applicable == 1 {
+				if init == 0 {
+					r.RegleDomaine = dr
+				} else {
+					r.RegleDomaine.Applicable = 0
+				}
+				r.RegleDomaine.Conform = dr.Conform
+				r.RegleDomaine.Evolution = dr.Evolution
+				break
+			}
+			//find parent
+			var pdom Domaine
+			tx.Model("Domaine").Where("ID = ?", tdom).First(&pdom)
+			//log.Printf(" dom %v, Parent %d\n", tdom, pdom.Parent)
+
+			if pdom.Parent == 0 || strconv.Itoa(int(pdom.Parent)) == tdom {
+				break
+			}
+			tdom = strconv.Itoa(int(pdom.Parent))
+			if init == 0 {
+				init = 1
+			}
+		}
+
 	}
 	t.Regles = rs
 
@@ -138,9 +164,9 @@ func (t *Theme) AfterFind(tx *gorm.DB) (err error) {
 			continue
 		}
 		rd := r.RegleDomaine
-		if rd.Applicable != 1 {
+		/*if rd.Applicable != 1 { //XXX disable inherit
 			continue
-		}
+		}*/
 		//fmt.Printf("Conform: %s\nEvolution: %s\n Axe 1: %s\n Axe 2: %s\n", rd.Conform, rd.Evolution, r.Axe1, r.Axe2)
 		cint, _ := strconv.Atoi(rd.Conform)
 		eint, _ := strconv.Atoi(rd.Evolution)

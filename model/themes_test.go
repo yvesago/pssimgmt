@@ -100,9 +100,9 @@ func initThemeValues(connString string, verbose bool) {
 	}
 	dbmap.Create(&dom2)
 
-	dr1 := ReglesDomaineses{Regle: r1.ID, Domaine: dom1.ID, Conform: "3", Evolution: "0"}
+	dr1 := ReglesDomaineses{Regle: r1.ID, Domaine: dom1.ID, Conform: "3", Evolution: "0", Applicable: 1}
 	dbmap.Create(&dr1)
-	dr2 := ReglesDomaineses{Regle: r2.ID, Domaine: dom1.ID, Conform: "2", Evolution: "1"}
+	dr2 := ReglesDomaineses{Regle: r2.ID, Domaine: dom1.ID, Conform: "2", Evolution: "1", Applicable: 1}
 	dbmap.Create(&dr2)
 
 	return

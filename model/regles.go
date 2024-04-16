@@ -3,6 +3,8 @@ package model
 import (
 	//	"fmt"
 	//"encoding/json"
+	"errors"
+	//"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -320,9 +322,36 @@ func GetRegleByDom(c *gin.Context) {
 	if err == nil {
 		domint, _ := strconv.Atoi(dom)
 		if domint != 0 {
-			var dr ReglesDomaineses
-			dbmap.Model("ReglesDomaineses").Where("regle = ? AND domaine = ?", regle.ID, dom).Find(&dr)
-			regle.RegleDomaine = dr
+			tdom := dom
+			init := 0
+			for {
+			    var dr ReglesDomaineses
+				dbRresult := dbmap.Model("ReglesDomaineses").Where("regle = ? AND domaine = ?", regle.ID, tdom).First(&dr)
+				//log.Printf(" => regle by dom : Dom %s, ID %d, Name «%s», Applicable: %d, Exist %v\n", tdom, regle.ID, regle.Name, dr.Applicable, dbRresult.Error)
+				if errors.Is(dbRresult.Error, gorm.ErrRecordNotFound) == false && dr.Applicable == 1 {
+					if init == 0 {
+						regle.RegleDomaine = dr
+					} else {
+						regle.RegleDomaine.Applicable = 0
+					}
+					regle.RegleDomaine.Conform = dr.Conform
+					regle.RegleDomaine.Evolution = dr.Evolution
+					break
+				}
+				//find parent
+				var pdom Domaine
+				dbmap.Model("Domaine").Where("ID = ?", dom).First(&pdom)
+				//log.Printf("  => regle by dom : found parent %d\n", pdom.Parent)
+
+				if pdom.Parent == 0 || strconv.Itoa(int(pdom.Parent)) == tdom {
+					break
+				}
+				tdom = strconv.Itoa(int(pdom.Parent))
+				if init == 0 {
+					init = 1
+				}
+			}
+
 		}
 		c.JSON(200, regle)
 

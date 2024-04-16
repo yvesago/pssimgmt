@@ -29,7 +29,7 @@ type ReglesDomaineses struct {
 	Supldesc   string    `gorm:"column:supldesc;type:text;" json:"supldesc"`
 	Evolution  string    `gorm:"column:evolution;type:varchar;size:255;default:0;" json:"evolution"`
 	Conform    string    `gorm:"column:conform;type:varchar;size:255;" json:"conform"`
-	Applicable int64     `gorm:"column:applicable;type:integer;default:1;" json:"applicable"`
+	Applicable int64     `gorm:"column:applicable;type:integer;" json:"applicable"`
 	CreatedBy  int64     `gorm:"column:created_by;type:integer;" json:"created_by"`
 	CreatedOn  time.Time `gorm:"column:created_on;type:timestamp;" json:"created_on"`
 	UpdatedBy  int64     `gorm:"column:updated_by;type:integer;" json:"updated_by"`

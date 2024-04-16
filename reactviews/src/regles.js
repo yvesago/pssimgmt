@@ -343,18 +343,15 @@ export const RegleView = (props) => {
 //<ModifDialog record={record} dom={dom.select.id} viewonly={props.viewonly} />
 
 const Evaluation = (r) => {
-    if (r && r.id) {
-        if (r.applicable === 1) {
-            const c = r.conform;
-            return (
-                <>
-                    Conforme : <span style={classes['c'+c]}>{conformChoice(c)}</span>, Évolution: {r.evolution}
-                </>
-            );
-        }
-        else {
-            return( <Box sx={{ fontStyle: 'italic' }}>Non spécifique à ce périmètre</Box> );
-        }
+    if (r) {
+        const c = r.conform;
+        const inherit = (r.applicable === 0)?'Non spécifique à ce périmètre':'';
+        return (
+            <>
+                <Box sx={{ fontStyle: 'italic' }}>{inherit}</Box>
+                Conforme : <span style={classes['c'+c]}>{conformChoice(c)}</span>, Évolution: {r.evolution}
+            </>
+        );
     }
     return( <Box sx={{ fontStyle: 'italic' }}>Non spécifique à ce périmètre</Box> );
 };
