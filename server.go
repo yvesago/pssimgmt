@@ -105,7 +105,9 @@ func servermain(config Config) {
 	admin.Use(authMiddleware.MiddlewareFunc())
 	{
 		admin.GET("/todos", GetTodos)
+		admin.DELETE("/todos/:id", DeleteTodo)
 		admin.OPTIONS("/todos", Options)     // POST
+		admin.OPTIONS("/todos/:id", Options) // PUT, DELETE
 
 		admin.GET("/themestree/:dom", GetThemesTree)
 		admin.GET("/themes", GetThemes)

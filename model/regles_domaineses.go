@@ -39,7 +39,9 @@ type ReglesDomaineses struct {
 	UpdatedOn  time.Time `gorm:"column:updated_on;type:timestamp;" json:"updated_on"`
 	Domaines   Domaine   `gorm:"-;" json:"domain"`
 	Modif      string    `gorm:"-;" json:"modif"`
+        User1      int32     `gorm:"-" json:"user_1"`
 }
+
 
 func GetTodos(c *gin.Context) {
         dbmap := c.MustGet("DBmap").(*gorm.DB)
@@ -51,14 +53,15 @@ func GetTodos(c *gin.Context) {
                 return
         }*/
 
-        query := "SELECT * FROM regles_domaineses"
+        query := "SELECT * FROM regles_domaineses LEFT JOIN domaines ON regles_domaineses.domaine = domaines.ID"
         // Parse query string
         //  receive : map[_sort:[id] q:[wx] _order:[DESC] _start:[0] ...
         q := c.Request.URL.Query()
         s, o, l := ParseQuery(q)
         count := 0
         if s != "" {
-                dbmap.Table("regles_domaineses").Where(s).Count(&count)
+                //dbmap.Table("regles_domaineses").Where(s).Count(&count)
+                dbmap.Table("regles_domaineses").Joins("join domaines ON regles_domaineses.domaine = domaines.ID").Where(s).Count(&count)
                 query = query + " WHERE " + s
         } else {
                 dbmap.Table("regles_domaineses").Count(&count)
@@ -77,8 +80,37 @@ func GetTodos(c *gin.Context) {
                 c.Header("X-Total-Count", strconv.Itoa(count))
                 c.JSON(200, regles_domaineses)
         } else {
-                c.JSON(404, gin.H{"error": "no document(s) into the table"})
+                c.JSON(404, gin.H{"error": "no regles_domainese(s) into the table"})
         }
 
         // curl -i http://localhost:8080/api/v1/regles_domaineses
+}
+
+func DeleteTodo(c *gin.Context) {
+        dbmap := c.MustGet("DBmap").(*gorm.DB)
+        id := c.Params.ByName("id")
+
+        a := Auth(c)
+        a.Log("DeleteReglesDomainese " + id)
+        if a.Role != "admin" {
+                c.JSON(403, gin.H{"error": "admin role required"})
+                return
+        }
+
+        var regles_domainese ReglesDomaineses
+        err := dbmap.First(&regles_domainese, id).Error
+
+        if err == nil {
+                e := dbmap.Delete(&regles_domainese)
+
+                if e != nil {
+                        c.JSON(200, gin.H{"id #" + id: "deleted"})
+                } else {
+                        checkErr(nil, "Delete failed")
+                }
+        } else {
+                c.JSON(404, gin.H{"error": "regles_domainese not found"})
+        }
+
+        // curl -i -X DELETE http://localhost:8080/api/v1/regles_domaineses/1
 }
