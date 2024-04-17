@@ -324,7 +324,7 @@ export const RegleView = (props) => {
                     <Divider variant="middle" />
                 </Typography>
                 { dom && dom.select.id && dom.select.id !== '0' ?
-                    <Stack alignItems="center" direction="row" gap={1}> <FactCheckIcon color="disabled" />
+                    <Stack alignItems="center" direction="row" gap={1}> <FactCheckIcon color={(record.regle_domaine.applicable === 0)?'disabled':'primary'} />
                         { permissions === 'admin' ?
                             <ModifDialog record={record} dom={dom.select.id} viewonly={props.viewonly}/>
                             : null }
