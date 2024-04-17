@@ -16,6 +16,7 @@ import { DocList, DocEdit, DocCreate } from './doc';
 import { IsoList, IsoEdit, IsoCreate } from './iso';
 import { VersionList, VersionEdit, VersionCreate } from './version';
 import { DocumentList, DocumentEdit, DocumentCreate, DocumentShow } from './document';
+import { TodoList } from './todo';
 
 import HomeShow from './home';
 
@@ -84,6 +85,7 @@ const App = () => (
                 <Resource options={{ label:'Refs. docs'}} name="docs" list={DocList} edit={DocEdit} create={DocCreate} />,
                 <Resource options={{ label:'ISOs 27002'}} name="isos" list={IsoList} edit={IsoEdit} create={IsoCreate} />,
                 <Resource options={{ label:'Documents'}} name="documents" list={DocumentList} edit={DocumentEdit} create={DocumentCreate} show={DocumentShow} />,
+                <Resource options={{ label:'TODOs'}} name="todos" list={TodoList} />,
             </>
         )}
     </Admin>

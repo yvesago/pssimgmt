@@ -2,6 +2,9 @@ package model
 
 import (
 	"time"
+        "github.com/gin-gonic/gin"
+        "github.com/jinzhu/gorm"
+        "strconv"
 )
 
 /*
@@ -24,7 +27,7 @@ CREATE TABLE regles_domaineses (
 type ReglesDomaineses struct {
 	ID         int32     `gorm:"primary_key;AUTO_INCREMENT;column:id;type:integer;" json:"id"`
 	Regle      int32     `gorm:"column:regle;type:integer;" json:"regle"`
-	Domaine    int32     `gorm:"column:domaine;type:integer;" json:"domaineID"`
+	Domaine    int32     `gorm:"column:domaine;type:integer;" json:"domaine_id"`
 	Modifdesc  string    `gorm:"column:modifdesc;type:text;" json:"modifdesc"`
 	Supldesc   string    `gorm:"column:supldesc;type:text;" json:"supldesc"`
 	Evolution  string    `gorm:"column:evolution;type:varchar;size:255;default:0;" json:"evolution"`
@@ -36,4 +39,46 @@ type ReglesDomaineses struct {
 	UpdatedOn  time.Time `gorm:"column:updated_on;type:timestamp;" json:"updated_on"`
 	Domaines   Domaine   `gorm:"-;" json:"domain"`
 	Modif      string    `gorm:"-;" json:"modif"`
+}
+
+func GetTodos(c *gin.Context) {
+        dbmap := c.MustGet("DBmap").(*gorm.DB)
+
+        a := Auth(c)
+        a.Log("GetTodos")
+        /*if a.Role != "admin" {
+                c.JSON(403, gin.H{"error": "admin role required"})
+                return
+        }*/
+
+        query := "SELECT * FROM regles_domaineses"
+        // Parse query string
+        //  receive : map[_sort:[id] q:[wx] _order:[DESC] _start:[0] ...
+        q := c.Request.URL.Query()
+        s, o, l := ParseQuery(q)
+        count := 0
+        if s != "" {
+                dbmap.Table("regles_domaineses").Where(s).Count(&count)
+                query = query + " WHERE " + s
+        } else {
+                dbmap.Table("regles_domaineses").Count(&count)
+        }
+        if o != "" {
+                query = query + o
+        }
+        if l != "" {
+                query = query + l
+        }
+
+        var regles_domaineses []ReglesDomaineses
+        err := dbmap.Raw(query).Scan(&regles_domaineses).Error
+
+        if err == nil {
+                c.Header("X-Total-Count", strconv.Itoa(count))
+                c.JSON(200, regles_domaineses)
+        } else {
+                c.JSON(404, gin.H{"error": "no document(s) into the table"})
+        }
+
+        // curl -i http://localhost:8080/api/v1/regles_domaineses
 }

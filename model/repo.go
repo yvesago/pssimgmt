@@ -106,6 +106,10 @@ func ParseQuery(q map[string][]string) (string, string, string) {
 				case col == "casid":
 					// XXX trick for cas_id json
 					searches = append(searches, "cas_id LIKE \"%"+s+"%\"")
+				case col == "domaine_id":
+					// XXX trick for domaine_id json
+					searches = append(searches, "domaine LIKE \"%"+s+"%\"")
+				case col == "id":
 				case col == "id":
 					searches = append(searches, "id = \""+s+"\"")
 				case col == "axe":

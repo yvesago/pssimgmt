@@ -533,7 +533,7 @@ export const ModifDialog = (props) => {
     };
 
     const handleSave = (d) => {
-        const url = MyConfig.API_URL + '/regles/' + d.regle + '/' + d.domaineID;
+        const url = MyConfig.API_URL + '/regles/' + d.regle + '/' + d.domaine_id;
         var r = d;
         r.modif = 'modif';
         const token = localStorage.getItem('ttoken');

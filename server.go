@@ -104,6 +104,8 @@ func servermain(config Config) {
 	//admin.Use()
 	admin.Use(authMiddleware.MiddlewareFunc())
 	{
+		admin.GET("/todos", GetTodos)
+		admin.OPTIONS("/todos", Options)     // POST
 
 		admin.GET("/themestree/:dom", GetThemesTree)
 		admin.GET("/themes", GetThemes)
