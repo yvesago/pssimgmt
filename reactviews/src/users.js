@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { List, Filter, Datagrid, TextField, EmailField } from 'react-admin';
 import { ReferenceArrayField, SingleFieldList, ChipField } from 'react-admin';
-import { Edit, SimpleForm, TextInput, SelectInput  } from 'react-admin';
+import { Edit, SimpleForm, TextInput, SelectInput, WithListContext } from 'react-admin';
+import { Show, SimpleShowLayout, TopToolbar, EditButton, Labeled, usePermissions } from 'react-admin';
 
 const roles = [
     { name: 'admin', id: 'admin' },
@@ -44,4 +45,33 @@ export const UserEdit = () => (
         </SimpleForm>
     </Edit>
 );
+
+export const UserShow = () => {
+    const { permissions } = usePermissions();
+    return(<Show actions={permissions === 'admin' ? <TopToolbar><EditButton /></TopToolbar> : false } >
+        <SimpleShowLayout>
+            <Labeled label="Login">
+                <TextField source="casid" />
+            </Labeled>
+            <Labeled label="Nom">
+                <TextField source="name" />
+            </Labeled>
+            <Labeled label="Role">
+                <TextField  source="user_role" />
+            </Labeled>
+            <Labeled label="Mail">
+                <EmailField source="email" />
+            </Labeled>
+            <ReferenceArrayField label="Domaines" reference="domaines" source="doms">
+                <WithListContext render={({ data }) => (
+                    <ul>
+                        {data.map(tag => (
+                            <li key={tag.id}>{tag.name}</li>
+                        ))}
+                    </ul>
+                )} />
+            </ReferenceArrayField>
+        </SimpleShowLayout>
+    </Show>);
+};
 

@@ -10,14 +10,16 @@ import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import LocalLibrarySharpIcon from '@mui/icons-material/LocalLibrarySharp';
 import AccountTreeSharpIcon from '@mui/icons-material/AccountTreeSharp';
 import LibraryBooksSharpIcon from '@mui/icons-material/LibraryBooksSharp';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
 
-const allMenu = ['home', 'regles', 'versions'];
+const allMenu = ['home', 'todos', 'regles', 'versions'];
 const icons = { 
     'users': <UserIcon />, 
     'versions': <HistoryRoundedIcon />,  
     'domaines': <GroupWorkRoundedIcon />,
     'docs': <LocalLibrarySharpIcon />,
     'themes': <AccountTreeSharpIcon />,
+    'todos': <FactCheckIcon />,
     'documents': <LibraryBooksSharpIcon />,
 };
 
@@ -41,7 +43,7 @@ const Menu = ({ onMenuClick }) => {
                     );
                 }
                 else  { return null;}
-            })
+            }).sort()
             }
             <Logout />
             <Divider />

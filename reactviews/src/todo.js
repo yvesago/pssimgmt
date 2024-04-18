@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { List, Filter, Datagrid, TextField, NumberField, DateField, ReferenceField } from 'react-admin';
 //import { Edit, Create, SimpleForm, TextInput, SelectInput, NumberInput, Labeled } from 'react-admin';
-import { TextInput, NumberInput, SelectInput, ReferenceInput, AutocompleteInput  } from 'react-admin';
-import { BulkExportButton, BulkDeleteButton } from 'react-admin';
+import { TextInput, FunctionField, SelectInput, ReferenceInput, AutocompleteInput  } from 'react-admin';
+import { WrapperField, BulkDeleteButton } from 'react-admin';
 import { useNotify, useRedirect, useRecordContext, usePermissions } from 'react-admin';
 
 
@@ -34,25 +34,30 @@ const EvolTextField = () => {
     return ( <Box>{evolChoice(record.evolution)}</Box> );
 };
 
+const intApplicable = [
+    { id: '1', name: '✔' },
+    { id: '0', name: '✘' },
+];
+
 const filterToQuery = searchText => ({ name: `${searchText}` });
 const filterCSSIQuery = searchText => ({ name: `${searchText}` });
 
 const TodoFilter = (props) => {
-    //const { permissions } = usePermissions();
+    const { permissions } = usePermissions();
     return (<Filter {...props}>
-        <SelectInput label="Applicable" source="applicable" choices={[
-            { id: '1', name: '1' },
-            { id: '0', name: '0' },
-        ]} alwaysOn />
+        <SelectInput label="Applicable" source="applicable" choices={intApplicable} alwaysOn />
+        <SelectInput label="Conforme" source="conform" choices={conform} alwaysOn />
         <SelectInput label="Évolution" source="evolution" choices={evol} alwaysOn />
-        <ReferenceInput source="domaine_id" reference="domaines" alwaysOn>
+        <ReferenceInput source="domaine_id" reference="domaines" label="Périmètre">
             <AutocompleteInput label="Périmètre" optionText="name" filterToQuery={filterToQuery} />
         </ReferenceInput>
-        <ReferenceInput source="domaine_id" reference="domaines" alwaysOn>
-            <ReferenceInput source="user_1" reference="users">
-                <AutocompleteInput label="CSSI 1" optionText="name" filterToQuery={filterCSSIQuery} />
+        {permissions === 'admin' ?
+            <ReferenceInput source="domaine_id" reference="domaines" label="CSSIs">
+                <ReferenceInput source="user" reference="users">
+                    <AutocompleteInput label="CSSIs" optionText="name" filterToQuery={filterCSSIQuery} />
+                </ReferenceInput>
             </ReferenceInput>
-        </ReferenceInput>
+            : null}
     </Filter>);
 };
 
@@ -95,21 +100,16 @@ const ShortTextField = (props) => {
     return ( <TextField sx={ styles.field } {...props} /> );
 };
 
-/*import { useRecordContext } from 'react-admin';
-
-const FixEmptyField = ({ source }) => {
-    const record = useRecordContext();
-    if (record && record.id === 0 ) { return (''); }
-    return (<span>{record && record[source]}</span>);
-};*/
-
 
 const ModifPanel = () => {
     const record = useRecordContext();
     //console.log(record);
     return (
         <Box>
-            Updated on <DateField source="updated_on" record={record} /> by <TextField source="updated_by" record={record} /> <br />
+            Updated on <DateField source="updated_on" record={record} /> by &nbsp; 
+            <ReferenceField source="updated_by" reference="users" link={false}>
+                <TextField source="name" />
+            </ReferenceField> <br />
             <ShortTextField source="modifdesc" record={record} /> <br />
             <ShortTextField source="supldesc" record={record} />
         </Box>
@@ -117,39 +117,38 @@ const ModifPanel = () => {
 };
 
 
-const TodoBulkActionButtons = () => {
-    const { permissions } = usePermissions();
-    return (
-        <Box>
-            <BulkExportButton />
-            {permissions === 'admin' ?
-                <BulkDeleteButton />
-                : null}
-        </Box>
-    );
-};
-
-
 export const TodoList = () => {
-    //const { permissions } = usePermissions();
+    const { permissions } = usePermissions();
     return (<List
         filters={<TodoFilter />}
         filterDefaultValues={{ applicable: 1, evolution: '1' }}
         sort={{ field: 'conform', order: 'ASC' }}
-        bulkActionButtons={<TodoBulkActionButtons />}
+        exporter={false}
         perPage={50}
     >
-        <Datagrid expand={<ModifPanel />}>
-            <ReferenceField label="Périmètre" source="domaine_id" reference="domaines">
+        <Datagrid expand={<ModifPanel />} bulkActionButtons={permissions === 'admin' ? <BulkDeleteButton /> : false}>
+            <FunctionField
+                label='App.'
+                source="applicable"
+                render={record => (record.applicable === 1)?'✔':'✘'}
+            />
+            <ReferenceField label="Périmètre" source="domaine_id" reference="domaines" link={permissions === 'admin' ? 'edit' : false}>
                 <TextField source="name" />
             </ReferenceField>
             <ReferenceField label="Règle" source="regle" reference="regles" link="show">
                 <TextField source="name" />
             </ReferenceField>
-            <ReferenceField label="CSSI 1" source="user_1" reference="users">
-                <TextField source="name" />
-            </ReferenceField>
-            <NumberField source="applicable" />
+            <WrapperField label="CSSIs" sortBy="user_1">
+                <ReferenceField label="CSSI 1" source="user_1" reference="users" link={permissions === 'admin' ? 'edit' : 'show'}>
+                    <TextField source="name" />
+                </ReferenceField> &nbsp;
+                <ReferenceField label="CSSI 2" source="user_2" reference="users" link={permissions === 'admin' ? 'edit' : 'show'}>
+                    , &nbsp; <TextField source="name" />
+                </ReferenceField>
+                <ReferenceField label="CSSI 3" source="user_3" reference="users" link={permissions === 'admin' ? 'edit' : 'show'}>
+                    , &nbsp; <TextField source="name" />
+                </ReferenceField>
+            </WrapperField>
             <ConformTextField source="conform" />
             <EvolTextField source="evolution" />
         </Datagrid>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStore, usePermissions, useGetRecordId, useRedirect } from 'react-admin';
-import { Title, Form, EditButton, useDataProvider } from 'react-admin';
+import { Title, Form, EditButton, useDataProvider, useTheme } from 'react-admin';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -67,8 +67,8 @@ const renderRegles = (r, mask) => {
 };
 
 
-const box = (axe, value, index) => (
-    <Box width={value} bgcolor="grey.300" p={0.7} my={0.5} key={index}>
+const box = (axe, value, index, theme) => (
+    <Box width={value} bgcolor={theme === 'dark'?'grey':'grey.300'} p={0.7} my={0.5} key={index}>
         {axe}: {value}
     </Box>
 );
@@ -81,7 +81,7 @@ const RenderEval = (e) => (
             if ( axe !== '' ) {
                 const value = 10 * e.record.conforme[index];
                 if ( value > 10 ) {
-                    return box(axe, value + '%', index);
+                    return box(axe, value + '%', index, e.theme);
                 }
                 else {
                     return <Box key={index}>{axe}: {value}%</Box>;
@@ -110,6 +110,7 @@ const ThemeByDomShow = () => {
     const [dom] = useStore('dom', { select: {id:0 }, evaluation: {}, mask: {etu:false, nok:false} });
     const mask = dom.mask || { mask: {etu:false, nok:false} }; 
     const [state, setState] = useState({data: null, dom: 0, etu: mask.etu, nok: mask.nok});
+    const [theme] = useTheme();
 
 
     useEffect(() => {
@@ -146,7 +147,7 @@ const ThemeByDomShow = () => {
                     <Card>
                         <CardContent>
                             <h4>Périmètre {dom.select.name}</h4>
-                            <RenderEval record={d.evaluation} />
+                            <RenderEval record={d.evaluation} theme={theme} />
                         </CardContent>
                     </Card>
                     : null }

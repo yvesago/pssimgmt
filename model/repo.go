@@ -71,7 +71,7 @@ func InitDb(dbName string, verbose bool) *gorm.DB {
 		&Domaine{}, &ReglesThemeses{},
 		&Iso27002s{}, &IsoRegleses{},
 		&Users{}, &IsoThemes{},
-                &Versions{}, &Documents{},
+		&Versions{}, &Documents{},
 		&ReglesDomaineses{})
 
 	db.DB().Ping()
@@ -109,10 +109,10 @@ func ParseQuery(q map[string][]string) (string, string, string) {
 				case col == "domaine_id":
 					// XXX trick for domaine_id json
 					searches = append(searches, "domaine LIKE \"%"+s+"%\"")
-				case col == "user_1":
-					searches = append(searches, "user1 = \""+s+"\"")
 				case col == "id":
 					searches = append(searches, "id = \""+s+"\"")
+				case col == "status":
+					searches = append(searches, "status = \""+s+"\"")
 				case col == "axe":
 					searches = append(searches, "axe1 = \""+s+"\" OR axe2 = \""+s+"\"")
 				case col == "user":
@@ -145,8 +145,8 @@ func ParseQuery(q map[string][]string) (string, string, string) {
 		if sortField == "user_2" {
 			sortField = "user2"
 		}
-		if sortField == "user_2" {
-			sortField = "user2"
+		if sortField == "user_3" {
+			sortField = "user3"
 		}
 		// prevent SQLi
 		valid := regexp.MustCompile("^[A-Za-z0-9_]+$")

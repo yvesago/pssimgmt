@@ -10,7 +10,7 @@ import { ThemeList, ThemeEdit, ThemeCreate } from './themes';
 import ThemeShow from './themesShow';
 import { RegleList, RegleEdit, RegleCreate } from './regles';
 import RegleShow from './reglesShow';
-import { UserList, UserEdit } from './users';
+import { UserList, UserEdit, UserShow } from './users';
 import { DomaineList, DomaineEdit, DomaineCreate } from './domaines';
 import { DocList, DocEdit, DocCreate } from './doc';
 import { IsoList, IsoEdit, IsoCreate } from './iso';
@@ -66,7 +66,7 @@ const App = () => (
                 <CustomRoutes noLayout>
                     <Route path="/themestree" element={<ThemeList />} />,
                 </CustomRoutes>,
-                <Resource name="users" options={{ label: 'Users'}} list={UserList} edit={UserEdit} icon={UserIcon} />,
+                <Resource name="users" options={{ label: 'Users'}} list={UserList} edit={UserEdit} show={UserShow} icon={UserIcon} />,
                 <Resource options={{ label:'Périmètres'}}  name="domaines" list={DomaineList} edit={DomaineEdit} create={DomaineCreate} />,
                 <Resource options={{ label:'Thèmes'}} name="themes" list={ThemeList} edit={ThemeEdit} show={ThemeShow} create={ThemeCreate} />,
                 <Resource 
@@ -76,6 +76,7 @@ const App = () => (
                     edit={permissions === 'admin' ? RegleEdit: null} 
                     show={RegleShow} 
                     create={permissions === 'admin' ? RegleCreate: null} />,
+                {permissions === 'admin' || permissions === 'cssi' ? <Resource options={{ label:'TODO'}} name="todos" list={TodoList} /> : null },
                 <Resource 
                     name="versions" 
                     options={{ label:'Versions'}} 
@@ -85,7 +86,6 @@ const App = () => (
                 <Resource options={{ label:'Refs. docs'}} name="docs" list={DocList} edit={DocEdit} create={DocCreate} />,
                 <Resource options={{ label:'ISOs 27002'}} name="isos" list={IsoList} edit={IsoEdit} create={IsoCreate} />,
                 <Resource options={{ label:'Documents'}} name="documents" list={DocumentList} edit={DocumentEdit} create={DocumentCreate} show={DocumentShow} />,
-                <Resource options={{ label:'TODOs'}} name="todos" list={TodoList} />,
             </>
         )}
     </Admin>

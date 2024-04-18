@@ -2,6 +2,8 @@ import React from 'react';
 import { Radar } from 'react-chartjs-2';
 import { useStore } from 'react-admin';
 
+import { Chart as ChartJS, RadialLinearScale, PointElement, LineElement, Filler, Title, Legend } from 'chart.js';
+ChartJS.register( RadialLinearScale, PointElement, LineElement, Filler, Title, Legend);
 
 const RadarData = {
     labels: [],
@@ -34,27 +36,31 @@ const RadarOptions = {
         title: {
             display: true,
             text: 'Conformité',
+            padding: {
+                top: 50,
+                bottom: 0
+            },
         },
         legend: {
             position: 'bottom',
             align: 'start',
         },
     },
-    scale: {
-        min: 0,
-        max: 10,
-        ticks: {
-            stepSize: 2,
-            showLabelBackdrop: true,
-            backdropColor: 'rgba(203, 197, 11, 1)'
-        },
-        angleLines: {
-            color: 'rgba(255, 255, 255, .3)',
-            lineWidth: 1
-        },
-        gridLines: {
-            color: 'rgba(255, 255, 255, .3)',
-            circular: true
+    scales: {
+        r : {
+            min: 0,
+            max: 10,
+            ticks: {
+                stepSize: 2,
+                showLabelBackdrop: false,
+                backdropPadding: 8,
+            },
+            grid: {
+                color: 'lightgrey',
+            },
+            angleLines: {
+                color: 'lightgrey',
+            },
         }
     },
 };

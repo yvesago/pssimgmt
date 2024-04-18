@@ -110,7 +110,7 @@ const ReglesFilter = (props) => (
         <TextInput label="Description" source="descriptions" alwaysOn />
         <TextInput label="Code" source="code" />
         <TextInput label="Notes" source="notes" />
-        <SelectInput source="status" choices={status} />
+        <SelectInput source="status" choices={status} alwaysOn />
         <SelectInput source="axe" choices={axes} />
     </Filter>
 );
@@ -165,7 +165,7 @@ const RegleBulkActionButtons = () => {
 
 
 export const RegleList = () => (
-    <List filters={<ReglesFilter />} exporter={exporter} bulkActionButtons={<RegleBulkActionButtons />} perPage={25} >
+    <List filters={<ReglesFilter />} exporter={exporter} bulkActionButtons={<RegleBulkActionButtons />} filterDefaultValues={{ status: 'ok' }} perPage={25} >
         <Datagrid expand={<ReglePanel />} rowClick="show">
             <TextField source="code" />
             <TextField source="name" />

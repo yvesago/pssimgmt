@@ -81,12 +81,19 @@ func GetUsers(c *gin.Context) {
 
 	a := Auth(c)
 	a.Log("GetUsers")
-	if a.Role != "admin" {
+	/*if a.Role != "admin" {
 		c.JSON(403, gin.H{"error": "admin role required"})
+		return
+	}*/
+	if a.Role != "admin" && a.Role != "cssi" {
+		c.JSON(403, gin.H{"error": "admin or cssi role required"})
 		return
 	}
 
 	query := "SELECT * FROM users"
+	if a.Role == "cssi" {
+		query = "SELECT id,name FROM users"
+	}
 	// Parse query string
 	//  receive : map[_sort:[id] q:[wx] _order:[DESC] _start:[0] ...
 	q := c.Request.URL.Query()
@@ -124,8 +131,12 @@ func GetUser(c *gin.Context) {
 
 	a := Auth(c)
 	a.Log("GetUser " + id)
-	if a.Role != "admin" && strconv.Itoa(int(a.LoginID)) != id {
+	/*if a.Role != "admin" && strconv.Itoa(int(a.LoginID)) != id {
 		c.JSON(403, gin.H{"error": "admin role or self user required"})
+		return
+	}*/
+	if a.Role != "admin" && a.Role != "cssi" {
+		c.JSON(403, gin.H{"error": "admin or cssi role required"})
 		return
 	}
 
@@ -133,6 +144,12 @@ func GetUser(c *gin.Context) {
 	err := dbmap.First(&user, id).Error
 
 	if err == nil {
+		if a.Role != "admin" && (a.Role == "cssi" && strconv.Itoa(int(a.LoginID)) != id) {
+			// mask infos
+			user.Email = ""
+			user.CasID = ""
+			user.UserRole = ""
+		}
 		c.JSON(200, user)
 	} else {
 		c.JSON(404, gin.H{"error": "user not found"})
