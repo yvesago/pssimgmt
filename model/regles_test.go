@@ -16,12 +16,14 @@ import (
 func initReglesValues(connString string, verbose bool) {
 	dbmap := InitDb(connString, verbose)
 	a1 := Regles{
+		Code: "CR_1",
 		Name:     "regle 1",
 		Status: "ok",
 		Descorig: "descorig regle 1",
 	}
 	dbmap.Create(&a1)
 	a2 := Regles{
+		Code: "CR_2",
 		Name:     "regle 2",
 		Status: "ok",
 		Descorig: "descorig regle 2",
@@ -376,10 +378,12 @@ func TestRegle(t *testing.T) {
 	router.DELETE(urla+"/:id", DeleteRegle)
 	router.PUT(urla+"/:id", UpdateRegle)
 
+	router.GET("/api/v1/regle/:id", GetRegle)
+
 	b := new(bytes.Buffer)
 	// Add
 	log.Println("= http POST Regle")
-	var a = Regles{Name: "Name test", Status: "ok" }
+	var a = Regles{Code: "CR_1", Name: "Name test", Status: "ok" }
 	json.NewEncoder(b).Encode(a)
 	req, err := http.NewRequest("POST", urla, b)
 	if err != nil {
@@ -465,6 +469,16 @@ func TestRegle(t *testing.T) {
 	//fmt.Println(a1.Name)
 	//fmt.Println(resp.Body)
 	assert.Equal(t, a1.Name, a.Name, "a1 = a")
+
+	log.Println("= http GET one Regle by Code")
+	var a1c Regles
+	req, _ = http.NewRequest("GET", "/api/v1/regle/CR_1", nil)
+	resp = httptest.NewRecorder()
+	router.ServeHTTP(resp, req)
+	assert.Equal(t, 200, resp.Code, "http GET one success")
+	json.Unmarshal(resp.Body.Bytes(), &a1c)
+	//fmt.Println(a1c.Name)
+	assert.Equal(t, a1c.Name, a.Name, "a1c = a")
 
 	// Delete one
 	log.Println("= http DELETE one Regle")
