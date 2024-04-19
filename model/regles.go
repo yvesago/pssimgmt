@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"regexp"
 	"strconv"
 	"time"
 )
@@ -145,7 +146,14 @@ func GetRegle(c *gin.Context) {
 	a.Log("GetRegle " + id)
 
 	var regle Regles
-	err := dbmap.First(&regle, id).Error
+	var err error
+	codeMatch := regexp.MustCompile("^[A-Z][A-Z0-9_-]+$")
+	code := codeMatch.FindString(id)
+	if code != "" {
+		err = dbmap.First(&regle, "CODE= ?", code).Error
+	} else {
+		err = dbmap.First(&regle, id).Error
+	}
 
 	if err == nil {
 		c.JSON(200, regle)

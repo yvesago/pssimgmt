@@ -8,7 +8,7 @@ const darkTheme = { ...defaultTheme, palette: { mode: 'dark' } };
 import { Route } from 'react-router-dom';
 import { ThemeList, ThemeEdit, ThemeCreate } from './themes';
 import ThemeShow from './themesShow';
-import { RegleList, RegleEdit, RegleCreate } from './regles';
+import { RegleList, RegleEdit, RegleCreate, RegleCodeShow } from './regles';
 import RegleShow from './reglesShow';
 import { UserList, UserEdit, UserShow } from './users';
 import { DomaineList, DomaineEdit, DomaineCreate } from './domaines';
@@ -69,6 +69,7 @@ const App = () => (
                 <Resource name="users" options={{ label: 'Users'}} list={UserList} edit={UserEdit} show={UserShow} icon={UserIcon} />,
                 <Resource options={{ label:'Périmètres'}}  name="domaines" list={DomaineList} edit={DomaineEdit} create={DomaineCreate} />,
                 <Resource options={{ label:'Thèmes'}} name="themes" list={ThemeList} edit={ThemeEdit} show={ThemeShow} create={ThemeCreate} />,
+                <Resource options={{ label:'Règle'}} name="regle" edit={RegleCodeShow} />,
                 <Resource 
                     name="regles" 
                     options={{ label:'Règles'}} 

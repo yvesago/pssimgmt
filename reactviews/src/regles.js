@@ -6,7 +6,8 @@ import { Create, Edit, SimpleForm, TextInput, NumberInput, Toolbar, SaveButton }
 import { ReferenceArrayInput, SelectArrayInput, AutocompleteArrayInput, SelectInput, BooleanInput, FormDataConsumer } from 'react-admin';
 import { useNotify, useRefresh, useRedirect, usePermissions, useRecordContext, useStore } from 'react-admin';
 import { BulkDeleteButton, BulkExportButton, Labeled } from 'react-admin';
-import { downloadCSV } from 'react-admin';
+import { downloadCSV, useGetRecordId, useGetOne } from 'react-admin';
+
 import jsonExport from 'jsonexport/dist';
 import { NavLink } from 'react-router-dom';
 
@@ -390,6 +391,8 @@ const RegleViewExt = (props) =>  {
                 <Fragment key={props.record.id}>
                     {Updated_by(props.record)}
                     <Divider />
+                    Direct URL: <NavLink to={`/regle/${props.record.code}`}>/regle/{props.record.code}</NavLink>
+                    <Divider />
                     Axes: {axeChoice(props.record.axe1)}, {axeChoice(props.record.axe2)} 
                     <Divider />
                     Notes: <br />
@@ -580,4 +583,13 @@ export const ModifDialog = (props) => {
         </Typography>
     );
 
+};
+
+export const RegleCodeShow = () => {
+    const recordId = useGetRecordId();
+    const redirect = useRedirect();
+    const { data: data, isLoading, error } = useGetOne('regle', { id: recordId });
+    if (error) return <Error />;
+    if (!data) return null;
+    redirect('show','regles', data.id);
 };

@@ -119,6 +119,8 @@ func servermain(config Config) {
 		admin.OPTIONS("/themes", Options)     // POST
 		admin.OPTIONS("/themes/:id", Options) // PUT, DELETE
 
+		admin.GET("/regle/:id", GetRegle)
+
 		admin.GET("/regles", GetRegles)
 		admin.GET("/regles/:id", GetRegle)
 		admin.GET("/regles/:id/:dom", GetRegleByDom)

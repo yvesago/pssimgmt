@@ -43,13 +43,13 @@ const Menu = ({ onMenuClick }) => {
                     );
                 }
                 else  { return null;}
-            }).sort()
+            })
             }
             <Logout />
             <Divider />
             { (permissions === 'admin' ) ? 'Admin': '' }
             { resources.map( (resource) =>  { 
-                if (allMenu.includes(resource.name) == false && permissions === 'admin' ) {
+                if (allMenu.includes(resource.name) == false && permissions === 'admin' && resource.name !== 'regle' ) {
                     return (<MenuItemLink
                         key={resource.name}
                         primaryText= {resource.options && (resource.options.label || resource.name)}
