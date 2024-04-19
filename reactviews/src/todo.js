@@ -143,10 +143,10 @@ export const TodoList = () => {
                     <TextField source="name" />
                 </ReferenceField> &nbsp;
                 <ReferenceField label="CSSI 2" source="user_2" reference="users" link={permissions === 'admin' ? 'edit' : 'show'}>
-                    , &nbsp; <TextField source="name" />
+                    <>, &nbsp; <TextField source="name" /></>
                 </ReferenceField>
                 <ReferenceField label="CSSI 3" source="user_3" reference="users" link={permissions === 'admin' ? 'edit' : 'show'}>
-                    , &nbsp; <TextField source="name" />
+                    <>, &nbsp; <TextField source="name" /></>
                 </ReferenceField>
             </WrapperField>
             <ConformTextField source="conform" />
