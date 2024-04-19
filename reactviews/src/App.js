@@ -17,6 +17,7 @@ import { IsoList, IsoEdit, IsoCreate } from './iso';
 import { VersionList, VersionEdit, VersionCreate } from './version';
 import { DocumentList, DocumentEdit, DocumentCreate, DocumentShow } from './document';
 import { TodoList } from './todo';
+import { About } from './about';
 
 import HomeShow from './home';
 
@@ -78,6 +79,9 @@ const App = () => (
                     show={RegleShow} 
                     create={permissions === 'admin' ? RegleCreate: null} />,
                 {permissions === 'admin' || permissions === 'cssi' ? <Resource options={{ label:'TODO'}} name="todos" list={TodoList} /> : null },
+                <CustomRoutes>
+                    <Route path="/about" element={<About />} />
+                </CustomRoutes>
                 <Resource 
                     name="versions" 
                     options={{ label:'Versions'}} 

@@ -11,6 +11,7 @@ import LocalLibrarySharpIcon from '@mui/icons-material/LocalLibrarySharp';
 import AccountTreeSharpIcon from '@mui/icons-material/AccountTreeSharp';
 import LibraryBooksSharpIcon from '@mui/icons-material/LibraryBooksSharp';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
+import InfoIcon from '@mui/icons-material/Info';
 
 const allMenu = ['home', 'todos', 'regles', 'versions'];
 const icons = { 
@@ -45,6 +46,7 @@ const Menu = ({ onMenuClick }) => {
                 else  { return null;}
             })
             }
+            <MenuItemLink key='about' primaryText='About' to='/about' leftIcon={<InfoIcon />} onClick={onMenuClick} />
             <Logout />
             <Divider />
             { (permissions === 'admin' ) ? 'Admin': '' }
