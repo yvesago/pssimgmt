@@ -1,8 +1,9 @@
-import * as React from 'react';
+import React from 'react';
 import { List, Filter, Datagrid, TextField, NumberField, DateField, ReferenceField } from 'react-admin';
-import { Edit, Create, SimpleForm, TextInput, SelectInput, NumberInput, Labeled } from 'react-admin';
+import { Edit, Create, SimpleForm, TextInput, SelectInput, NumberInput, required, Labeled } from 'react-admin';
+import { ReferenceArrayField, ChipField, SingleFieldList } from 'react-admin';
 import { ReferenceInput, AutocompleteInput, ReferenceArrayInput, AutocompleteArrayInput } from 'react-admin';
-import { useNotify, useRedirect } from 'react-admin';
+import { useRecordContext, useNotify, useRedirect, useGetOne } from 'react-admin';
 
 
 const status = [
@@ -28,18 +29,34 @@ const ShortTextField = (props) => {
 };
 
 
-import { useRecordContext } from 'react-admin';
-
 const FixEmptyField = ({ source }) => {
     const record = useRecordContext();
     if (record && record.id === 0 ) { return (''); }
     return (<span>{record && record[source]}</span>);
 };
 
+const ReglesPanel = () => {
+    const record = useRecordContext();
+    const { data: data, isLoading, error } = useGetOne('themes', { id: record.id });
+    if (isLoading) return '...';
+    // if (error) return <Error />;
+    record.regles_ids = data.regles_ids;
+
+    return (
+        <> Règles:
+            <ReferenceArrayField label="Règles" reference="regles" source="regles_ids">
+                <SingleFieldList>
+                    <ChipField source="code" />
+                </SingleFieldList>
+            </ReferenceArrayField>
+        </>
+    );
+};
+
 
 export const ThemeList = () => (
     <List filters={<ThemeFilter />} perPage={25}>
-        <Datagrid rowClick="edit">
+        <Datagrid expand={<ReglesPanel />} rowClick="edit">
             <TextField source="name" />
             <NumberField source="ordre" />
             <ReferenceField label="Parent" source="parent" reference="themes">
@@ -54,17 +71,17 @@ export const ThemeList = () => (
     </List>
 );
 
-export const ThemeEdit = props => {
+export const ThemeEdit = () => {
     const parse = data => {
         return data?data:0;
     };
     const format = data => {
         return data?data:'';
     };
-    return (<Edit {...props}>
+    return (<Edit>
         <SimpleForm>
             <TextField source="id" />
-            <TextInput source="name" />
+            <TextInput source="name" validate={required()} />
             <NumberInput source="ordre" />
             <ReferenceInput label="Parent" source="parent" parse={parse} format={format} reference="themes">
                 <AutocompleteInput optionText="name" />
@@ -99,7 +116,7 @@ export const ThemeEdit = props => {
     </Edit>
     );};
 
-export const ThemeCreate = props => {
+export const ThemeCreate = () => {
     const notify = useNotify();
     const redirect = useRedirect();
 
@@ -110,14 +127,14 @@ export const ThemeCreate = props => {
         return data?data:'';
     };
     const onSuccess = (data) => {
-        notify('ra.notification.created', 'info', { smart_count: 1 }, props.mutationMode === 'undoable');
-        redirect('list', props.basePath, data.id, data);
+        notify('ra.notification.created', 'info', { undoable: false });
+        redirect('list');
     };
 
     return (
-        <Create onSuccess={onSuccess} {...props}>
+        <Create mutationOptions={{ onSuccess }}>
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <NumberInput source="ordre" />
                 <ReferenceInput label="Parent" source="parent" parse={parse} format={format} reference="themes">
                     <AutocompleteInput optionText="name" />

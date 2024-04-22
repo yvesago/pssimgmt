@@ -25,10 +25,10 @@ const styles = {
 };
 
 const conform = [
-    { name: 'Totalement', id: '3', appliqué: '✔', strictement: '✔', documenté :'✔', testé :'✔' },
-    { name: 'Partiellement', id: '2', appliqué: '✔', strictement: '✔', documenté :'~', testé :'.' },
-    { name: 'Parfois', id: '1', appliqué: '✔', strictement: '.', documenté :'.', testé :'.' },
-    { name: 'Jamais', id: '0', appliqué: '.', strictement: '.', documenté :'.', testé :'.' },
+    { name: 'Totalement', id: '3', appliqué: '✔', strictement: '✔', documenté :'✔', contrôlée :'✔' },
+    { name: 'Partiellement', id: '2', appliqué: '✔', strictement: '✔', documenté :'~', contrôlée :'.' },
+    { name: 'Parfois', id: '1', appliqué: '✔', strictement: '.', documenté :'.', contrôlée :'.' },
+    { name: 'Jamais', id: '0', appliqué: '.', strictement: '.', documenté :'.', contrôlée :'.' },
 ];
 
 
@@ -44,10 +44,10 @@ export const About = () => {
                 <Table sx={{ width: 250 }} aria-label="conform table">
                     <TableHead>
                         <TableCell><strong>Conformité</strong></TableCell>
-                        <TableCell>Appliqué</TableCell>
-                        <TableCell>Strictement</TableCell>
-                        <TableCell>Documenté</TableCell>
-                        <TableCell>Testé</TableCell>
+                        <TableCell>Appliquée</TableCell>
+                        <TableCell>Systématiquement</TableCell>
+                        <TableCell>Documentée</TableCell>
+                        <TableCell>Contrôlée</TableCell>
                     </TableHead>
                     <TableBody>{conform.map((row) => (
                         <TableRow>
@@ -59,7 +59,7 @@ export const About = () => {
                     ))}</TableBody>
                 </Table>
             </TableContainer>
-            <h3>Code source</h3>
+            <h3>Code source v2.x</h3>
             <div style={{ display:'flex', justifyContent:'center' }}>
                 <Link href="https://github.com/yvesago/pssimgmt" underline="hover" target="_blank">
                     <GitHubIcon/> https://github.com/yvesago/pssimgmt
