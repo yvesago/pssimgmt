@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { List, Filter, Datagrid, TextField } from 'react-admin';
-import { Edit, Create, SimpleForm, TextInput } from 'react-admin';
+import { Edit, Create, SimpleForm, TextInput, required } from 'react-admin';
 import { useNotify, useRedirect } from 'react-admin';
 
 const IsoFilter = (props) => (
@@ -22,29 +22,29 @@ export const IsoList = props => (
     </List>
 );
 
-export const IsoEdit = props => (
-    <Edit {...props}>
+export const IsoEdit = () => (
+    <Edit>
         <SimpleForm>
-            <TextInput source="name" />
+            <TextInput source="name" validate={required()} />
             <TextInput source="code" />
             <TextInput multiline source="descorig" fullWidth />
         </SimpleForm>
     </Edit>
 );
 
-export const IsoCreate = props => {
+export const IsoCreate = () => {
     const notify = useNotify();
     const redirect = useRedirect();
 
-    const onSuccess = (data) => {
-        notify('ra.notification.created', 'info', { smart_count: 1 }, props.mutationMode === 'undoable');
-        redirect('list', props.basePath, data.id, data);
+    const onSuccess = () => {
+        notify('ra.notification.created', { type: 'info', undoable: false });
+        redirect('/isos');
     };
 
     return (
-        <Create onSuccess={onSuccess} {...props}>
+        <Create mutationOptions={{onSuccess}}>
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <TextInput source="code" />
                 <TextInput multiline source="descorig" fullWidth />
             </SimpleForm>

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Fragment } from 'react';
 import { List, Filter, Datagrid, TextField, DateField, ReferenceField } from 'react-admin';
-import { Edit, Create, SimpleForm, TextInput, DateInput, Labeled } from 'react-admin';
+import { Edit, Create, SimpleForm, TextInput, DateInput, Labeled, required } from 'react-admin';
 import { BulkExportButton, BulkDeleteButton } from 'react-admin';
 import { useNotify, useRedirect, usePermissions } from 'react-admin';
 
@@ -77,7 +77,7 @@ const dateParser = value => {
 export const VersionEdit = () => (
     <Edit>
         <SimpleForm>
-            <TextInput source="name" label="Nom" />
+            <TextInput source="name" label="Nom" validate={required()} />
             <TextInput source="validationpar" label="Validation par" fullWidth />
             <DateInput source="validationdate" label="Date de validation" parse={dateParser} format={dateFormatter} />
             <TextInput multiline source="changelog" label="Changements" fullWidth />
@@ -110,7 +110,7 @@ export const VersionCreate = () => {
     return (
         <Create mutationOptions={{onSuccess}}>
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <TextInput source="validationpar" fullWidth />
                 <DateInput source="validationdate" parse={dateParser} />
                 <TextInput multiline source="changelog" fullWidth />

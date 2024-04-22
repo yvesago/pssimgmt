@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { List, Filter, Datagrid, TextField, ReferenceField } from 'react-admin';
+import { List, Filter, Datagrid, TextField, ReferenceField, required } from 'react-admin';
 import { Edit, Create, SimpleForm, TextInput, ReferenceInput, SelectInput, AutocompleteInput } from 'react-admin';
 import { useNotify, useRedirect } from 'react-admin';
 
@@ -47,7 +47,7 @@ export const DomaineList = () => (
     </List>
 );
 
-export const DomaineEdit =  (props) => {
+export const DomaineEdit =  () => {
     const parse = data => {
         return data?data:0;
     };
@@ -55,9 +55,9 @@ export const DomaineEdit =  (props) => {
         return data?data:'';
     };
     return (
-        <Edit mutationMode="pessimistic" {...props}>
+        <Edit mutationMode="pessimistic">
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <ReferenceInput label="Parent" source="parent" reference="domaines" parse={parse} format={format} filterToQuery={searchText => ({ name: searchText })}>
                     <SelectInput optionText="name" />
                 </ReferenceInput>
@@ -76,7 +76,7 @@ export const DomaineEdit =  (props) => {
     );
 };
 
-export const DomaineCreate = props => {
+export const DomaineCreate = () => {
     const notify = useNotify();
     const redirect = useRedirect();
 
@@ -86,15 +86,15 @@ export const DomaineCreate = props => {
     const format = data => {
         return data?data:'';
     };
-    const onSuccess = (data) => {
-        notify('ra.notification.created', 'info', { smart_count: 1 }, props.mutationMode === 'undoable');
-        redirect('list', props.basePath, data.id, data);
+    const onSuccess = () => {
+        notify('ra.notification.created', 'info', { undoable: false });
+        redirect('list','domaines');
     };
 
     return (
-        <Create onSuccess={onSuccess} {...props}>
+        <Create mutationOptions={{ onSuccess }}>
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <ReferenceInput label="Parent" source="parent" parse={parse} format={format} reference="domaines">
                     <SelectInput optionText="name" />
                 </ReferenceInput>

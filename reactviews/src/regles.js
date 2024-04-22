@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import request from 'superagent';
 
 import { List, Filter, Datagrid, TextField, SelectField, DateField, ReferenceField } from 'react-admin';
-import { Create, Edit, SimpleForm, TextInput, NumberInput, Toolbar, SaveButton } from 'react-admin';
+import { Create, Edit, SimpleForm, TextInput, required, NumberInput, Toolbar, SaveButton } from 'react-admin';
 import { ReferenceArrayInput, SelectArrayInput, AutocompleteArrayInput, SelectInput, BooleanInput, FormDataConsumer } from 'react-admin';
 import { useNotify, useRefresh, useRedirect, usePermissions, useRecordContext, useStore } from 'react-admin';
 import { BulkDeleteButton, BulkExportButton, Labeled } from 'react-admin';
@@ -196,7 +196,7 @@ export const RegleEdit = props => {
     return (
         <Edit title={<RegleTitle />} {...props} onSubmit={onSuccess} mutationMode="pessimistic">
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <ReferenceField label="Périmètre" source="theme.id" reference="themes">
                     <TextField source="name" />
                 </ReferenceField>
@@ -205,9 +205,9 @@ export const RegleEdit = props => {
                 <TextInput multiline source="descorig" fullWidth />
                 <TextInput multiline source="description" fullWidth />
                 <TextInput multiline source="notes" fullWidth />
-                <SelectInput source="status" choices={status} />
-                <SelectInput source="axe2" choices={axes} />
+                <SelectInput source="status" choices={status} validate={required()} />
                 <SelectInput source="axe1" choices={axes} />
+                <SelectInput source="axe2" choices={axes} />
 
                 <ReferenceArrayInput source="iso_ids" reference="isos" perPage={25}>
                     <AutocompleteArrayInput optionText="name" />
@@ -235,18 +235,20 @@ export const RegleEdit = props => {
 };
 
 export const RegleCreate = () => (
-    <Create>
-        <SimpleForm redirect="edit">
-            <TextInput source="name" />
+    <Create redirect="list">
+        <SimpleForm>
+            <TextInput source="name" validate={required()} />
             <TextInput source="code" />
             <TextInput multiline source="descorig" fullWidth />
             <TextInput multiline source="description" fullWidth />
             <TextInput multiline source="notes" fullWidth />
-            <SelectInput source="status" choices={status} />
-            <SelectInput source="axe2" choices={axes} />
+            <SelectInput source="status" choices={status} validate={required()} />
             <SelectInput source="axe1" choices={axes} />
-            <TextInput source="regles_iso" />
-            <ReferenceArrayInput source="docs_ids" reference="docs" perPage={100}>
+            <SelectInput source="axe2" choices={axes} />
+            <ReferenceArrayInput source="iso_ids" reference="isos" perPage={25}>
+                <SelectArrayInput optionText="name" />
+            </ReferenceArrayInput>
+            <ReferenceArrayInput source="docs_ids" reference="docs" perPage={25}>
                 <SelectArrayInput optionText="name" />
             </ReferenceArrayInput>
         </SimpleForm>
@@ -482,7 +484,7 @@ export const EvalDialog = (props) => {
                 <DialogTitle id="dialog-title">Évaluation</DialogTitle>
                 <DialogContent>
 
-                    <Edit actions={null}>
+                    <Edit actions={null} mutationMode="pessimistic">
                         <SimpleForm style={{marginLeft:'1em'}} toolbar={<RegleEditToolbar />} defaultValues={rd} onSubmit={handleSave}>
 
                             <BooleanInput label="Règle du périmètre" source="applicable" />

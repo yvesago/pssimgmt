@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { List, Filter, Datagrid, TextField, DateField, NumberField } from 'react-admin';
-import { Edit, Create, SimpleForm, TextInput, NumberInput } from 'react-admin';
+import { Edit, Create, SimpleForm, TextInput, NumberInput, required } from 'react-admin';
 import { useNotify, useRedirect } from 'react-admin';
 
 const DocFilter = (props) => (
@@ -24,10 +24,10 @@ export const DocList = () => (
     </List>
 );
 
-export const DocEdit = props => (
-    <Edit {...props}>
+export const DocEdit = () => (
+    <Edit>
         <SimpleForm>
-            <TextInput source="name" />
+            <TextInput source="name" validate={required()} />
             <NumberInput source="ordre" />
             <TextInput source="url" fullWidth />
             <TextInput multiline source="description" fullWidth />
@@ -53,7 +53,7 @@ export const DocCreate = () => {
     return (
         <Create mutationOptions={{onSuccess}}>
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <TextInput source="url" fullWidth />
                 <TextInput multiline source="description" fullWidth />
                 <TextInput multiline source="notes" fullWidth />

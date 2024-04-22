@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { List, Filter, Datagrid, TextField, DateField, ReferenceField } from 'react-admin';
 import { Edit, Create, SimpleForm, TextInput, Labeled, Show, SimpleShowLayout } from 'react-admin';
-import { useNotify, useRedirect, useRecordContext  } from 'react-admin';
+import { useNotify, useRedirect, useRecordContext, required  } from 'react-admin';
 
 import ReactMarkdown from 'react-markdown';
 
@@ -81,7 +81,7 @@ export const DocumentCreate = () => {
     return (
         <Create mutationOptions={{onSuccess}}>
             <SimpleForm>
-                <TextInput source="name" />
+                <TextInput source="name" validate={required()} />
                 <TextInput source="titre" fullWidth />
                 <TextInput multiline source="description" fullWidth />
                 <TextInput multiline source="notes" fullWidth />
@@ -94,7 +94,7 @@ export const DocumentShow = () => (
     <Show>
         <SimpleShowLayout>
             <Labeled label="Nom">
-                <TextField source="name" />
+                <TextField source="name" validate={required()} />
             </Labeled>
             <Labeled label="Titre">
                 <TextField source="titre" />
