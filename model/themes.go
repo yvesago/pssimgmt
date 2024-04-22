@@ -95,28 +95,16 @@ func (t *Theme) AfterFind(tx *gorm.DB) (err error) {
 		t.IsoThemesIDs = append(t.IsoThemesIDs, i.ID)
 	}
 
-	var rsint []int32
-	tx.Raw("SELECT r.id from regles AS r JOIN regles_themeses AS rt ON r.ID = rt.regle AND rt.th=?", t.ID).Pluck("DISTINCT(ID)", &rsint)
-	/*for _, r := range rsint {
-		t.ReglesIDs = append(t.ReglesIDs, r)
-	}*/
-	t.ReglesIDs = rsint
-	/*var rs []*Regles
-	tx.Model("Regles").Joins("JOIN regles_themeses AS rt ON regles.ID = rt.regle AND rt.th=?", t.ID).Find(&rs)
-	for i, r := range rs {
-		rs[i].Theme.Name = t.Name
-		rs[i].Theme.ID = t.ID
-		t.ReglesIDs = append(t.ReglesIDs, r.ID)
-	}
-	t.Regles = rs*/
+	/*var rsint []int32
+	tx.Raw("SELECT r.id from regles AS r JOIN regles_themeses AS rt ON r.ID = rt.regle AND rt.th=? ORDER BY r.order ASC", t.ID).Pluck("DISTINCT(ID)", &rsint)
+	t.ReglesIDs = rsint*/
 
 	if t.Dom == "" {
 		return nil
 	}
 
 	var rs []*Regles
-	tx.Model("Regles").Joins("JOIN regles_themeses AS rt ON regles.ID = rt.regle AND rt.th=?", t.ID).Find(&rs)
-	//dbmap.Raw("SELECT * from regles AS r JOIN regles_themeses AS rt ON r.ID = rt.regle AND rt.th=?", id).Find(&rs)
+	tx.Model("Regles").Joins("JOIN regles_themeses AS rt ON regles.ID = rt.regle AND rt.th=?", t.ID).Order("regles.ordre").Find(&rs)
 
 	for i, r := range rs {
 		if rs[i].Status != "ok" {
@@ -451,6 +439,7 @@ func UpdateTheme(c *gin.Context) {
 			Description: json.Description,
 			Notes:       json.Notes,
 			Status:      json.Status,
+			Ordre:       json.Ordre,
 		}
 		if newtheme.Name != "" { // XXX Check mandatory fields
 			if ValidOptionalStatus(newtheme.Status) == false {
@@ -482,6 +471,7 @@ func UpdateTheme(c *gin.Context) {
 					"Description": json.Description,
 					"Notes":       json.Notes,
 					"Status":      json.Status,
+					"Ordre":       json.Ordre,
 					"UpdatedBy":   a.LoginID,
 					"UpdatedOn":   time.Now(),
 				}).Error; err == nil {
