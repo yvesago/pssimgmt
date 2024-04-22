@@ -7,6 +7,7 @@ const authClient = (authUrl) => ({
     login: async () => {return request.get(authUrl);},
     logout: async () => {
         localStorage.removeItem('ttoken');
+        localStorage.removeItem(PreviousLocationStorageKey);
         return Promise.resolve('/login');
     },
     //checkAuth: () => Promise.resolve(),
@@ -30,8 +31,9 @@ const authClient = (authUrl) => ({
     checkError: async (error) => {
         const status = error.status;
         if (status === 401 || status === 403) {
-            //localStorage.removeItem('ttoken');
-            return Promise.reject('/login');
+            //console.log(error);
+            localStorage.removeItem(PreviousLocationStorageKey);
+            return Promise.reject({ message: 'Utilisateur non autorisé. En attente de validation.' });
         }
         return Promise.resolve();
     },
@@ -59,7 +61,7 @@ const authClient = (authUrl) => ({
         //console.log(match[1]);
         const token = match[1];
         localStorage.setItem('ttoken', token);
-        console.log(token);
+        //console.log(token);
         //window.location.href = MyConfig.BASE_PATH;
         window.location.href = localStorage.getItem(PreviousLocationStorageKey) !== null ? localStorage.getItem(PreviousLocationStorageKey) : MyConfig.BASE_PATH;
         return Promise.resolve();
