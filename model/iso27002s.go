@@ -150,11 +150,15 @@ func UpdateIso27002(c *gin.Context) {
 		//XXX custom fields mapping
 		newiso27002 := Iso27002s{
 			Name: json.Name,
+			Code: json.Code,
+			Descorig: json.Descorig,
 		}
 		if newiso27002.Name != "" { // XXX Check mandatory fields
 			if err := dbmap.Model(&iso27002).Updates(
 				map[string]interface{}{ // gorm don't update null value in struct !!!
 					"Name": newiso27002.Name,
+					"Code": newiso27002.Code,
+					"Descorig": newiso27002.Descorig,
 				}).Error; err == nil {
 				c.JSON(200, newiso27002)
 			} else {

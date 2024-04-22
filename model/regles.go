@@ -56,7 +56,7 @@ type Regles struct {
 }
 
 func ValidOptionalAxes(val string) bool {
-	var validAxesStrId = []string{"0", "1", "2", "3", "4", "5"}
+	var validAxesStrId = []string{"0", "1", "2", "3", "4", "5", "6"}
 	if val == "" || Contains(validAxesStrId, val) {
 		return true
 	}
@@ -224,6 +224,7 @@ func UpdateRegle(c *gin.Context) {
 		//XXX custom fields mapping
 		newregle := Regles{
 			Name:        json.Name,
+			Code:        json.Code,
 			Ordre:       json.Ordre,
 			Descorig:    json.Descorig,
 			Description: json.Description,
@@ -263,6 +264,7 @@ func UpdateRegle(c *gin.Context) {
 				map[string]interface{}{ // gorm don't update null value in struct !!!
 					"Name":        newregle.Name,
 					"Ordre":       newregle.Ordre,
+					"Code":        newregle.Code,
 					"Descorig":    newregle.Descorig,
 					"Description": newregle.Description,
 					"Notes":       newregle.Notes,
