@@ -59,7 +59,7 @@ const RegleByDomShow = () => {
 
                     {dom && dom.select.id !== '0' ?
                         <h2>Périmètre : {dom.select.name}</h2>
-                        : null }
+                        : <div>&nbsp;</div> }
                     <RegleView record={state.data} />
                 </div>
             </Show>
