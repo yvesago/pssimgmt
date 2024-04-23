@@ -351,7 +351,7 @@ const Evaluation = (r) => {
         const inherit = (r.applicable === 0)?'Non spécifique à ce périmètre':'';
         return (
             <>
-                <Box sx={{ fontStyle: 'italic' }}>{inherit}</Box>
+                <Box sx={{ fontStyle: 'italic', color: 'text.disabled' }}>{inherit}</Box>
                 Conforme : <span style={classes['c'+c]}>{conformChoice(c)}</span>, Évolution: {r.evolution}
             </>
         );
@@ -452,6 +452,7 @@ export const EvalDialog = (props) => {
             .then( (response)  => {
                 notify('Update');
                 setRd(response.body);
+                record.regle_domaine = response.body;
                 refresh();
             })
             .catch((e) => {
@@ -466,13 +467,13 @@ export const EvalDialog = (props) => {
         return '';
     }
 
-    if (props.viewonly === false) {
+    /*if (props.viewonly === false) { // allow eval from theme view
         return ( 
             <Typography component="span" variant="body2">
                 <Evaluation {...rd} />
             </Typography>
         );
-    }
+    }*/
 
     return (
         <>
@@ -525,6 +526,7 @@ export const EvalDialog = (props) => {
 
 export const ModifDialog = (props) => {
     const [open, setOpen] = useState(false);
+    const record = props.record;//useRecordContext();
     const notify = useNotify();
     const refresh = useRefresh();
 
@@ -546,8 +548,8 @@ export const ModifDialog = (props) => {
             .put(url)
             .send(r)
             .set('Authorization', `Bearer ${token}`)
-            .then( ()  => {
-                //setRd(response.body);
+            .then( (response)  => {
+                record.regle_domaine = response.body;
                 refresh();
                 notify('Update');
             })
