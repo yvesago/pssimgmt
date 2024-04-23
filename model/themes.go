@@ -95,11 +95,11 @@ func (t *Theme) AfterFind(tx *gorm.DB) (err error) {
 		t.IsoThemesIDs = append(t.IsoThemesIDs, i.ID)
 	}
 
-	/*var rsint []int32
-	tx.Raw("SELECT r.id from regles AS r JOIN regles_themeses AS rt ON r.ID = rt.regle AND rt.th=? ORDER BY r.order ASC", t.ID).Pluck("DISTINCT(ID)", &rsint)
-	t.ReglesIDs = rsint*/
 
 	if t.Dom == "" {
+	    var rsint []int32
+	    tx.Raw("SELECT r.id from regles AS r JOIN regles_themeses AS rt ON r.ID = rt.regle AND rt.th=?", t.ID).Order("r.ordre").Pluck("DISTINCT(ID)", &rsint)
+	    t.ReglesIDs = rsint
 		return nil
 	}
 
