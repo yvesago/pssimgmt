@@ -7,7 +7,7 @@ const authClient = (authUrl) => ({
     login: async () => {return request.get(authUrl);},
     logout: async () => {
         localStorage.removeItem('ttoken');
-        localStorage.removeItem(PreviousLocationStorageKey);
+        //localStorage.removeItem(PreviousLocationStorageKey);
         return Promise.resolve('/login');
     },
     //checkAuth: () => Promise.resolve(),
@@ -16,7 +16,10 @@ const authClient = (authUrl) => ({
         const url = new URL(window.location.href);
         const match = url.hash.match(/\/login$/);
         const match2 = url.hash.match(/^#\/(\w+\/?)(\d+\/?)(\w+?)$/);
-        if ( url.hash !== '' && match === null && match2 !== null ) {
+        const match3 = url.hash.match(/^#\/regle\/[A-Z0-9-_]+$/);
+        //console.log('**checkAuth** url.hash, m1, m2,m3',url.hash, match, match2, match3);
+        if ( url.hash !== '' && match === null && (match2 !== null || match3 !== null) ) {
+            //console.log('**checkAuth** store',url.href);
             localStorage.setItem(PreviousLocationStorageKey, url.href);
         }
 
@@ -31,9 +34,9 @@ const authClient = (authUrl) => ({
     checkError: async (error) => {
         const status = error.status;
         if (status === 401 || status === 403) {
-            //console.log(error);
-            localStorage.removeItem(PreviousLocationStorageKey);
-            return Promise.reject({ message: 'Utilisateur non autorisé. En attente de validation.' });
+            //console.log('**checkError**',error);
+            //localStorage.removeItem(PreviousLocationStorageKey);
+            return Promise.reject({ message: error.message });
         }
         return Promise.resolve();
     },
