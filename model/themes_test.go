@@ -245,6 +245,7 @@ func TestThemeTree(t *testing.T) {
 
 	var urla = "/api/v1/themes"
 	router.GET(urla+"tree", GetThemesTree)
+	router.GET(urla+"tree/:dom", GetThemesTree)
 	router.GET(urla+"/:id", GetTheme)
 	router.GET(urla+"/:id/:dom", GetThemeByDom)
 
@@ -267,6 +268,31 @@ func TestThemeTree(t *testing.T) {
 `
 	assert.Equal(t, "PSSI", as.Name, "1 result")
 	assert.Equal(t, tres, as.String(), "1 result")
+
+	// Get Theme Tree for dom 1 with evaluation data
+	log.Println("= http GET Theme Tree for dom 1 with evaluation data")
+	req, _ = http.NewRequest("GET", urla+"tree/1", nil)
+	resp = httptest.NewRecorder()
+	router.ServeHTTP(resp, req)
+	assert.Equal(t, 200, resp.Code, "http success")
+	//var as Theme
+	json.Unmarshal(resp.Body.Bytes(), &as)
+	fmt.Println(&as)
+	//fmt.Printf("%+v\n", as)
+	//fmt.Println(prettyPrint(&as.Evaluation))
+	tres = `[0] PSSI 0
+[1] theme 1 0
+	[4] subtheme 11 1
+	[3] sub theme 12 1
+[2] theme 2 0
+`
+	assert.Equal(t, "PSSI", as.Name, "1 result")
+	assert.Equal(t, tres, as.String(), "1 result")
+	assert.Equal(t, 10, as.Evaluation.Conforme[0], "10/10 gouvernance")
+	assert.Equal(t, 8, as.Evaluation.Conforme[5], "8/10 Évaluation")
+	assert.Equal(t, 10, as.Evaluation.Evolution[0], "évolution 10/10 gouvernance")
+	assert.Equal(t, 10, as.Evaluation.Evolution[5], "évolution 10/10 évaluation")
+
 
 	// Get theme by dom
 	log.Println("= http GET Theme By Dom")
