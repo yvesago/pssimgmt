@@ -108,7 +108,7 @@ func ParseQuery(q map[string][]string) (string, string, string) {
 					searches = append(searches, "cas_id LIKE \"%"+s+"%\"")
 				case col == "domaine_id":
 					// XXX trick for domaine_id json
-					searches = append(searches, "domaine LIKE \"%"+s+"%\"")
+					searches = append(searches, "domaine = \""+s+"\"")
 				case col == "id":
 					searches = append(searches, "id = \""+s+"\"")
 				case col == "status":
@@ -147,6 +147,9 @@ func ParseQuery(q map[string][]string) (string, string, string) {
 		}
 		if sortField == "user_3" {
 			sortField = "user3"
+		}
+		if sortField == "domaine_id" {
+			sortField = "domaine"
 		}
 		// prevent SQLi
 		valid := regexp.MustCompile("^[A-Za-z0-9_]+$")
