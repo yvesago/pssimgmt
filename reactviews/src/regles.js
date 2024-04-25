@@ -561,7 +561,7 @@ export const ModifDialog = (props) => {
         setOpen(false);
     };
 
-    if (props.viewonly === false) {
+    if (props.viewonly === false || record.regle_domaine.applicable === 0) {
         return null;
     }
 

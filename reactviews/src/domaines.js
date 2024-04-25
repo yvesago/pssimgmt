@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { List, Filter, Datagrid, TextField, ReferenceField, required } from 'react-admin';
-import { Edit, Create, SimpleForm, TextInput, ReferenceInput, SelectInput, AutocompleteInput } from 'react-admin';
+import { Edit, Create, SimpleForm, TextInput, ReferenceInput, AutocompleteInput } from 'react-admin';
 import { useNotify, useRedirect } from 'react-admin';
 
 
@@ -8,11 +8,11 @@ const DomaineFilter = (props) => (
     <Filter {...props}>
         <TextInput label="Name" source="name" alwaysOn />
         <TextInput label="Description" source="description" alwaysOn />
-        <ReferenceInput label="User" source="user" reference="users" filterToQuery={searchText => ({ casid: searchText })}>
-            <AutocompleteInput source="casid" optionText="casid" />
+        <ReferenceInput label="User" source="user" reference="users">
+            <AutocompleteInput source="casid" optionText="casid" filterToQuery={searchText => ({ casid: searchText })} />
         </ReferenceInput>
-        <ReferenceInput label="Parent" source="parent" reference="domaines" filterToQuery={searchText => ({ name: searchText })}>
-            <AutocompleteInput source="name" optionText="name" />
+        <ReferenceInput label="Parent" source="parent" reference="domaines">
+            <AutocompleteInput source="name" optionText="name" filterToQuery={searchText => ({ name: searchText })} />
         </ReferenceInput>
     </Filter>
 );
@@ -58,18 +58,18 @@ export const DomaineEdit =  () => {
         <Edit mutationMode="pessimistic">
             <SimpleForm>
                 <TextInput source="name" validate={required()} />
-                <ReferenceInput label="Parent" source="parent" reference="domaines" parse={parse} format={format} filterToQuery={searchText => ({ name: searchText })}>
-                    <SelectInput optionText="name" />
+                <ReferenceInput label="Parent" source="parent" reference="domaines" parse={parse} format={format}>
+                    <AutocompleteInput optionText="name" filterToQuery={searchText => ({ name: searchText })} />
                 </ReferenceInput>
                 <TextInput source="description" multiline fullWidth />
-                <ReferenceInput label="User 1" source="user_1" reference="users" parse={parse} format={format} filterToQuery={searchText => ({ casid: searchText })}>
-                    <AutocompleteInput source="casid" optionText="casid" />
+                <ReferenceInput label="User 1" source="user_1" reference="users" parse={parse} format={format}>
+                    <AutocompleteInput source="casid" optionText="casid" filterToQuery={searchText => ({ casid: searchText })} />
                 </ReferenceInput>
-                <ReferenceInput label="User 2" source="user_2" reference="users" parse={parse} format={format} filterToQuery={searchText => ({ casid: searchText })}>
-                    <AutocompleteInput optionText="casid" />
+                <ReferenceInput label="User 2" source="user_2" reference="users" parse={parse} format={format}>
+                    <AutocompleteInput optionText="casid" filterToQuery={searchText => ({ casid: searchText })}/>
                 </ReferenceInput>
-                <ReferenceInput label="User 3" source="user_3" reference="users" parse={parse} format={format} filterToQuery={searchText => ({ casid: searchText })} >
-                    <AutocompleteInput optionText="casid" />
+                <ReferenceInput label="User 3" source="user_3" reference="users" parse={parse} format={format}>
+                    <AutocompleteInput optionText="casid" filterToQuery={searchText => ({ casid: searchText })} />
                 </ReferenceInput>
             </SimpleForm>
         </Edit>
@@ -96,17 +96,17 @@ export const DomaineCreate = () => {
             <SimpleForm>
                 <TextInput source="name" validate={required()} />
                 <ReferenceInput label="Parent" source="parent" parse={parse} format={format} reference="domaines">
-                    <SelectInput optionText="name" />
+                    <AutocompleteInput optionText="name" filterToQuery={searchText => ({ name: searchText })} />
                 </ReferenceInput>
                 <TextInput source="description" multiline fullWidth />
-                <ReferenceInput label="User 1" source="user_1" reference="users" parse={parse} format={format} filterToQuery={searchText => ({ casid: searchText })}>
-                    <AutocompleteInput optionText="casid" />
+                <ReferenceInput label="User 1" source="user_1" reference="users" parse={parse} format={format}>
+                    <AutocompleteInput optionText="casid" filterToQuery={searchText => ({ casid: searchText })} />
                 </ReferenceInput>
-                <ReferenceInput label="User 2" source="user_2" reference="users" parse={parse} format={format} filterToQuery={searchText => ({ casid: searchText })}>
-                    <AutocompleteInput optionText="casid" />
+                <ReferenceInput label="User 2" source="user_2" reference="users" parse={parse} format={format}>
+                    <AutocompleteInput optionText="casid" filterToQuery={searchText => ({ casid: searchText })} />
                 </ReferenceInput>
-                <ReferenceInput label="User 3" source="user_3" reference="users" filterToQuery={searchText => ({ casid: searchText })}>
-                    <AutocompleteInput optionText="casid" />
+                <ReferenceInput label="User 3" source="user_3" reference="users">
+                    <AutocompleteInput optionText="casid" filterToQuery={searchText => ({ casid: searchText })} />
                 </ReferenceInput>
             </SimpleForm>
         </Create>
