@@ -2,7 +2,7 @@ package model
 
 import (
 	"encoding/json"
-	//"fmt"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"log"
@@ -35,24 +35,24 @@ func initTodoValues(connString string, verbose bool) {
 	}
 	dbmap.Create(&dom2)
 
-    r1 := Regles{
-        Name:     "regle 1",
-        Status: "ok",
-        Descorig: "descorig regle 1",
-    }
-    dbmap.Create(&r1)
-    r2 := Regles{
-        Name:     "regle 2",
-        Status: "ok",
-        Descorig: "descorig regle 2",
-    }
-    dbmap.Create(&r2)
+	r1 := Regles{
+		Name:     "regle 1",
+		Status:   "ok",
+		Descorig: "descorig regle 1",
+	}
+	dbmap.Create(&r1)
+	r2 := Regles{
+		Name:     "regle 2",
+		Status:   "ok",
+		Descorig: "descorig regle 2",
+	}
+	dbmap.Create(&r2)
 
-    dr1 := ReglesDomaineses{Regle: r1.ID, Domaine: dom1.ID, Applicable: 1, Modifdesc: "modif domaine 1 for regle 1 "}
-    dbmap.Create(&dr1)
+	dr1 := ReglesDomaineses{Regle: r1.ID, Domaine: dom1.ID, Applicable: 1, Modifdesc: "modif domaine 1 for regle 1 "}
+	dbmap.Create(&dr1)
 
-    dr2 := ReglesDomaineses{Regle: r2.ID, Domaine: dom2.ID, Applicable: 1, Modifdesc: "modif domaine 2 for regle 2 "}
-    dbmap.Create(&dr2)
+	dr2 := ReglesDomaineses{Regle: r2.ID, Domaine: dom2.ID, Applicable: 1, Modifdesc: "modif domaine 2 for regle 2 "}
+	dbmap.Create(&dr2)
 
 	return
 }
@@ -87,6 +87,16 @@ func TestTodo(t *testing.T) {
 	json.Unmarshal(resp.Body.Bytes(), &as)
 	//fmt.Printf("%+v\n", as)
 	assert.Equal(t, 2, len(as), "2 results")
+
+        //Search
+	log.Println("= http Search Todos for user 1")
+	req, _ = http.NewRequest("GET", urla+"?_start=1&_end=5&_sort=domaine_id&_order=ASC&user=1", nil)
+	resp = httptest.NewRecorder()
+	router.ServeHTTP(resp, req)
+	assert.Equal(t, 200, resp.Code, "http success")
+	fmt.Println(resp.Body)
+	json.Unmarshal(resp.Body.Bytes(), &as)
+	assert.Equal(t, 1, len(as), "1 result")
 
 	// Change user
 	userauth = AuthInfo{LoginID: 2, Role: "cssi"}
@@ -135,4 +145,3 @@ func TestTodo(t *testing.T) {
 	assert.Equal(t, 200, resp.Code, "http DELETE ")
 
 }
-

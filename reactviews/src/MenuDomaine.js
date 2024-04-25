@@ -38,7 +38,8 @@ const MenuDomaine = () => {
     const findleaf = (n) => {
         if (n) {
             if ( Array.isArray(n.children) === true) {
-                n.children.map((node) => findleaf(node));
+                const nsort = n.children.sort((a, b) => a.name.localeCompare(b.name));
+                nsort.map((node) => findleaf(node));
             }
             else {
                 leaf[n.id] = true;
