@@ -16,7 +16,8 @@ import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 
 import { RegleView } from './regles';
-//import { MyConfig } from './MyConfig';
+
+import ReactMarkdown from 'react-markdown';
 
 
 export const RegleMaskForm = () => {
@@ -158,7 +159,7 @@ const ThemeByDomShow = () => {
                     {permissions === 'admin' ?  <EditButton record={d} style={{float:'right'}}/> : null }
                     <CardContent>
                         <h2>{d.name}</h2>
-                        {d.descorig}
+                        <ReactMarkdown>{d.description !==''?d.description:d.descorig}</ReactMarkdown>
                         <ul>
                             {Array.isArray(d.regles) ? d.regles.map((r) => renderRegles(r, mask)) : null}
                         </ul>

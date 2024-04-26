@@ -1,6 +1,6 @@
 # PSSImgmt
 
-[![Coverage Status](https://coveralls.io/repos/github/yvesago/pssimgmt/badge.svg?branch=master)](https://coveralls.io/github/yvesago/pssimgmt)
+[![Coverage Status](https://coveralls.io/repos/github/yvesago/pssimgmt/badge.svg?branch=main)](https://coveralls.io/github/yvesago/pssimgmt)
 
 WIP
 
